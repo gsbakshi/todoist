@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:todoist/models/task.dart';
 import 'package:todoist/providers/tasks_provider.dart';
@@ -25,8 +26,9 @@ class _EditTodoScreenState extends State<EditTodoScreen> {
     'description': '',
     'createdAt': '',
   };
-  // var _isInit = true;
+  var _isInit = true;
   String appBarTitle = 'Add Todo';
+  DateTime _selectedDate;
 
   @override
   void dispose() {
@@ -51,7 +53,6 @@ class _EditTodoScreenState extends State<EditTodoScreen> {
       ).updateTask(_editedTask.id, _editedTask);
     } else {
       try {
-        print('create');
         await Provider.of<TasksProvider>(context, listen: false)
             .createTodo(_editedTask);
       } catch (error) {
@@ -78,33 +79,26 @@ class _EditTodoScreenState extends State<EditTodoScreen> {
     Navigator.of(context).pop();
   }
 
-  // @override
-  // void didChangeDependencies() {
-  //   if (_isInit) {
-  //     final todo = ModalRoute.of(context).settings.arguments as Task;
-  //     // final todoId = todo.id;
-  //     if (todo.id == null) {
-  //       return;
-  //     }
-  //     if (todo.id != null) {
-  //       appBarTitle = 'Edit Product';
-  //       _editedTask = Task(
-  //         id: todo.id,
-  //         title: todo.title,
-  //         description: todo.description,
-  //         createdAt: todo.createdAt,
-  //         completed: todo.completed,
-  //         completedAt: todo.completedAt,
-  //       );
-  //       _initValues = {
-  //         'title': todo.title,
-  //         'description': todo.description,
-  //       };
-  //     }
-  //   }
-  //   _isInit = false;
-  //   super.didChangeDependencies();
-  // }
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      final todo = ModalRoute.of(context).settings.arguments as Task;
+      if (todo != null) {
+        appBarTitle = 'Edit Product';
+        _editedTask = Task(
+          id: todo.id,
+          title: todo.title,
+          description: todo.description,
+        );
+        _initValues = {
+          'title': _editedTask.title,
+          'description': _editedTask.description,
+        };
+      }
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -179,6 +173,62 @@ class _EditTodoScreenState extends State<EditTodoScreen> {
                             completedAt: _editedTask.completedAt,
                           );
                         },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 24,
+                          horizontal: 12,
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                _selectedDate == null
+                                    ? 'No Date Chosen'
+                                    : 'Picked Date : ${DateFormat.yMMMd().format(_selectedDate)}',
+                                style: Theme.of(context).textTheme.bodyText1,
+                              ),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Color(0xff004e92),
+                                onPrimary: Colors.white,
+                              ),
+                              onPressed: () {
+                                showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime(2019),
+                                  lastDate: DateTime.now(),
+                                ).then(
+                                  (pickedDate) {
+                                    if (pickedDate == null) {
+                                      return;
+                                    }
+                                    _editedTask = Task(
+                                      id: _editedTask.id,
+                                      title: _editedTask.title,
+                                      description: _editedTask.description,
+                                      createdAt: pickedDate,
+                                      completed: _editedTask.completed,
+                                      completedAt: _editedTask.completedAt,
+                                    );
+                                    print(_editedTask.createdAt);
+                                    setState(() {
+                                      _selectedDate = pickedDate;
+                                    });
+                                  },
+                                );
+                              },
+                              child: Text(
+                                'Choose Date',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),

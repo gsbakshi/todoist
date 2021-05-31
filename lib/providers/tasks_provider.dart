@@ -86,13 +86,9 @@ class TasksProvider with ChangeNotifier {
         if (snapshot != null) {
           List<String> _dates = [];
           snapshot.docs.forEach((todo) {
-            if (!_dates.contains(todo['date']))
-              _dates.insert(
-                0,
-                todo['date'],
-              );
+            if (!_dates.contains(todo['date'])) _dates.add(todo['date']);
           });
-          print(_dates[0][9]);
+          _dates.sort((a, b) => b.compareTo(a));
           return _dates;
         } else {
           return [];
@@ -137,14 +133,14 @@ class TasksProvider with ChangeNotifier {
   }
 
   Future<void> createTodo(Task task) async {
-    final timeStamp = DateTime.now();
+    // final timeStamp = DateTime.now();
     try {
       await todosCollection.doc(userId).collection("todos").add({
         'title': task.title,
         'description': task.description,
         'completed': task.completed,
-        'createdAt': timeStamp.toIso8601String(),
-        'date': timeStamp.toString().substring(0, 10),
+        'createdAt': task.createdAt.toIso8601String(),
+        'date': task.createdAt.toString().substring(0, 10),
       });
     } catch (error) {
       throw error;
@@ -156,8 +152,8 @@ class TasksProvider with ChangeNotifier {
       await todosCollection.doc(userId).collection("todos").doc(id).update({
         'title': updatedTask.title,
         'description': updatedTask.description,
-        'completed': updatedTask.completed,
-        'createdAt': updatedTask.createdAt,
+        'createdAt': updatedTask.createdAt.toIso8601String(),
+        'date': updatedTask.createdAt.toString().substring(0, 10),
       });
     } catch (error) {
       throw error;

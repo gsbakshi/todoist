@@ -92,6 +92,7 @@ class _TodoItemState extends State<TodoItem> {
                             color: Colors.white.withOpacity(0.6),
                           ),
                           onPressed: () {
+                            print(snapshot.data.id + 'd');
                             Navigator.of(context).pushNamed(
                               EditTodoScreen.routeName,
                               arguments: snapshot.data,

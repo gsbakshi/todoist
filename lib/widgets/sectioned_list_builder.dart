@@ -81,10 +81,12 @@ class SectionedListBuilder extends StatelessWidget {
                     child: CircularProgressIndicator(
                   backgroundColor: Colors.white.withOpacity(0.6),
                 ));
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Something went wrong'));
+              } else if (snapshot.data == null) {
+                return Center(child: Text('Add a Task'));
               } else if (snapshot.data.isEmpty) {
                 return Center(child: Text('Add a Task'));
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Something went wrong'));
               } else {
                 return ListView.builder(
                   shrinkWrap: true,
