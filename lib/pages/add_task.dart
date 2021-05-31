@@ -14,6 +14,7 @@ class EditTodoScreen extends StatefulWidget {
 class _EditTodoScreenState extends State<EditTodoScreen> {
   final _formState = GlobalKey<FormState>();
   final _descriptionFocusNode = FocusNode();
+  final _titleFocusNode = FocusNode();
 
   var _isLoading = false;
   var _editedTask = Task(
@@ -33,6 +34,7 @@ class _EditTodoScreenState extends State<EditTodoScreen> {
   @override
   void dispose() {
     _descriptionFocusNode.dispose();
+    _titleFocusNode.dispose();
     super.dispose();
   }
 
@@ -125,7 +127,15 @@ class _EditTodoScreenState extends State<EditTodoScreen> {
                     children: [
                       TextFormField(
                         initialValue: _initValues['title'],
-                        decoration: InputDecoration(labelText: 'Title'),
+                        focusNode: _titleFocusNode,
+                        decoration: InputDecoration(
+                          labelText: 'Title',
+                          labelStyle: TextStyle(
+                            color: _titleFocusNode.hasFocus
+                                ? Colors.white60
+                                : Colors.white,
+                          ),
+                        ),
                         textInputAction: TextInputAction.next,
                         onFieldSubmitted: (_) {
                           FocusScope.of(context)
@@ -150,8 +160,16 @@ class _EditTodoScreenState extends State<EditTodoScreen> {
                       ),
                       TextFormField(
                         initialValue: _initValues['description'],
-                        decoration: InputDecoration(labelText: 'Description'),
+                        decoration: InputDecoration(
+                          labelText: 'Description',
+                          labelStyle: TextStyle(
+                            color: _descriptionFocusNode.hasFocus
+                                ? Colors.white60
+                                : Colors.white,
+                          ),
+                        ),
                         maxLines: 3,
+                        textInputAction: TextInputAction.done,
                         keyboardType: TextInputType.multiline,
                         focusNode: _descriptionFocusNode,
                         validator: (value) {

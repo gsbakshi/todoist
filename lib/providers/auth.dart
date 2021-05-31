@@ -98,9 +98,11 @@ class Auth with ChangeNotifier {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      _token = credential.idToken;
+      _token = credential.accessToken;
+      _userId = credential.idToken;
+
       print(_token);
-      print(credential);
+      print(_userId);
       print('sso');
       notifyListeners();
       return await FirebaseAuth.instance.signInWithCredential(credential);
