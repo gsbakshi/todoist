@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
 class SectionHeading extends StatelessWidget {
-  SectionHeading(this.title);
+  SectionHeading(
+    this.title, {
+    this.action,
+  });
   final String title;
+  final Widget action;
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +14,10 @@ class SectionHeading extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+        padding: EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: action != null ? 8 : 24,
+        ),
         decoration: BoxDecoration(
           // color: Theme.of(context).primaryColor,
           gradient: LinearGradient(
@@ -24,7 +31,13 @@ class SectionHeading extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Text(title),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(title),
+            action != null ? action : Container(),
+          ],
+        ),
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../models/task.dart';
 import '../providers/tasks_provider.dart';
+
 import '../pages/add_task.dart';
 
 class TodoItem extends StatefulWidget {
@@ -30,8 +31,6 @@ class _TodoItemState extends State<TodoItem> {
     );
   }
 
-  bool longPress = false;
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -55,11 +54,6 @@ class _TodoItemState extends State<TodoItem> {
                     tileColor: snapshot.data.completed
                         ? Theme.of(context).primaryColor
                         : Color(0xff004e92).withOpacity(0.9),
-                    onLongPress: () {
-                      setState(() {
-                        longPress = !longPress;
-                      });
-                    },
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                       side: BorderSide(width: 2, color: Colors.white),

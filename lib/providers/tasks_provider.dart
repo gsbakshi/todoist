@@ -209,7 +209,12 @@ class TasksProvider with ChangeNotifier {
   Future<void> batchDelete() {
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
-    return todosCollection.get().then((querySnapshot) {
+    return todosCollection
+        .doc(userId)
+        .collection("todos")
+        .where("completed", isEqualTo: true)
+        .get()
+        .then((querySnapshot) {
       querySnapshot.docs.forEach((document) {
         batch.delete(document.reference);
       });

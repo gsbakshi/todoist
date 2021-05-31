@@ -18,7 +18,36 @@ class SectionedListBuilder extends StatelessWidget {
       controller: _controller,
       child: Column(
         children: [
-          SectionHeading('Completed of Todos'),
+          SectionHeading(
+            'Completed Todos',
+            action: IconButton(
+              padding: const EdgeInsets.all(0),
+              icon: Icon(Icons.delete),
+              iconSize: 20,
+              onPressed: () async {
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: Text('Are you sure?'),
+                    content: Text('You are about the delete this task'),
+                    actions: [
+                      TextButton(
+                        child: Text('Yes'),
+                        onPressed: () async {
+                          Navigator.of(ctx).pop();
+                          provider.batchDelete();
+                        },
+                      ),
+                      TextButton(
+                        child: Text('Close'),
+                        onPressed: () => Navigator.of(ctx).pop(),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
           StreamBuilder<List<Task>>(
             stream: provider.streamCompletedTodos(),
             builder: (ctx, snapshot) {
