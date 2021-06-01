@@ -88,7 +88,6 @@ class Auth with ChangeNotifier {
     return _authenticate(email, password, 'signInWithPassword');
   }
 
-  // TODO debug google sign in
   Future<UserCredential> signInWithGoogle() async {
     try {
       final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
@@ -98,14 +97,13 @@ class Auth with ChangeNotifier {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      _token = credential.accessToken;
-      _userId = credential.idToken;
+      UserCredential cred =
+          await FirebaseAuth.instance.signInWithCredential(credential);
 
-      print(_token);
-      print(_userId);
-      print('sso');
+      _token = cred.user.refreshToken;
+      _userId = cred.user.uid;
       notifyListeners();
-      return await FirebaseAuth.instance.signInWithCredential(credential);
+      return cred;
     } catch (error) {
       throw error;
     }

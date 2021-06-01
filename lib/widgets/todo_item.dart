@@ -56,7 +56,7 @@ class _TodoItemState extends State<TodoItem> {
                         : Color(0xff004e92).withOpacity(0.9),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
-                      side: BorderSide(width: 2, color: Colors.white),
+                      // side: BorderSide(width: 2, color: Colors.white),
                     ),
                     leading: IconButton(
                       onPressed: () async {

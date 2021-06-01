@@ -4,16 +4,16 @@ import 'package:provider/provider.dart';
 import '../models/task.dart';
 import '../providers/tasks_provider.dart';
 
+import 'sectioned_list_item.dart';
 import 'todo_item.dart';
 import 'section_heading.dart';
-import 'sectioned_list_item.dart';
 
 class SectionedListBuilder extends StatelessWidget {
   final ScrollController _controller = ScrollController();
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<TasksProvider>(context);
+    final provider = Provider.of<TasksProvider>(context, listen: false);
     return SingleChildScrollView(
       controller: _controller,
       child: Column(
@@ -73,8 +73,8 @@ class SectionedListBuilder extends StatelessWidget {
             },
           ),
           SectionHeading('List of Todos'),
-          StreamBuilder(
-            stream: provider.streamdates(),
+          FutureBuilder(
+            future: provider.getdates(),
             builder: (ctx, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
