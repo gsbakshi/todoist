@@ -73,8 +73,8 @@ class SectionedListBuilder extends StatelessWidget {
             },
           ),
           SectionHeading('List of Todos'),
-          FutureBuilder(
-            future: provider.getdates(),
+          StreamBuilder(
+            stream: provider.getdates(),
             builder: (ctx, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(

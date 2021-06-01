@@ -76,13 +76,13 @@ class TasksProvider with ChangeNotifier {
     }
   }
 
-  Future<List<String>> getdates() {
+  Stream<List<String>> getdates() {
     try {
       return todosCollection
           .doc(userId)
           .collection("todos")
-          .get()
-          .then((QuerySnapshot snapshot) {
+          .snapshots()
+          .map((QuerySnapshot snapshot) {
         if (snapshot != null) {
           List<String> _dates = [];
           snapshot.docs.forEach((todo) {
